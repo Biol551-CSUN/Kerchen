@@ -5,6 +5,7 @@
   This is the **first** script that I am uploading. 
 
 #### What was done:
+* Proper file structure for use in R
 * It loads _two_ scripts and imports data. 
 * The data was checked to make sure that it was the correct file/type.
   
