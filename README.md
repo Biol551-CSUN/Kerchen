@@ -1,7 +1,7 @@
 # Kerchen
 
-#### Purpose of this repository
-* To learn how to code with R
-* To create scripts and analyze data
-* More efficient ways to make data transparent and repeatable
-* Learn how to create and edit markdown files
+#### 2022-02-02 Lab Work
+This is the first script that I am uploading. 
+* It loads two scripts and imports data. 
+* The data was checked to make sure that it was the correct file/type.
+  
