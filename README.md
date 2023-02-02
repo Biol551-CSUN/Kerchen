@@ -9,4 +9,4 @@
 * The data was checked to make sure that it was the correct file/type.
   
 [Week 2 Folder](https://github.com/Biol551-CSUN/Kerchen/tree/main/Week_02)
-![A cute cat](https://i0.wp.com/katzenworld.co.uk/wp-content/uploads/2019/06/funny-cat.jpeg?)
+![A cute cat](https://i0.wp.com/katzenworld.co.uk/wp-content/uploads/2019/06/funny-cat.jpeg?fit=1920%2C1920&ssl=1)
