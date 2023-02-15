@@ -20,7 +20,7 @@ view(Penguins_Mean_Var)  # Seeing if the data frame shows properly
 
 #### Part 2 ####
 
-Diplyr_plot <- penguins %>%
+Dplyr_plot <- penguins %>%
   filter(sex == "male") %>%   # Filters out females
   mutate(log_body_mass = log(body_mass_g)) %>%    # Adds a column in the data frame for the logarithm of body mass
   select(Species = species, island, sex, log_body_mass) %>%  #selects columns: species, island, sex, log_body_mass
@@ -37,11 +37,15 @@ Diplyr_plot <- penguins %>%
   theme_bw() +                                        # Uses a black and white theme and uses the Beyonce color palette
   theme(axis.title = element_text(size = 14,
                                   color = "black"),
+        axis.title.x = element_text(vjust = -1),
+        axis.title.y = element_text(vjust = 1.5),    # Adjusts the axis title away from the tick labels
         plot.title = element_text(size = 15, 
                                   face = "bold", 
-                                  hjust = 0.5))   # Changes the size and color of the axis titles. Also changes size and color of title of plot and centers it.
+                                  hjust = 0.5),
+        axis.text = element_text(size = 9,
+                                 color = "black"))   # Changes the size and color of the axis titles. Also changes size and color of title of plot and centers it.
 
-Diplyr_plot
+Dplyr_plot
 
 ggsave(here("Week_04", "Output", "DiplyrPlot.png"),
        width = 7, height = 5)
