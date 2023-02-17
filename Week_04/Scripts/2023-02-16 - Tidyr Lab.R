@@ -29,7 +29,7 @@ ChemData_clean <- ChemData %>%
   group_by(Variables, Site, Zone, Time) %>%  # Groups the data by variables, site, zone and time
   summarize(Param_mean = mean(Values, na.rm = TRUE),  # Calculates the mean
             Param_std = sd(Values, na.rm = TRUE)) %>% # Calculates the standard deviation
-  write_csv(here("Week_04", "Output", "Chem_Summary_Lab.csv"))  # Exports the csv file
+  write_csv(here("Week_04", "Output","Chem_Summary_Lab.csv")) #Exports the csv file
 
 View(ChemData_clean)
 
