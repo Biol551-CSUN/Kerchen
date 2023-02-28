@@ -22,7 +22,14 @@ View (DepthData)
 #### Data Analysis and Plotting ####
 
 datetimesCond <- CondData %>%
-  mutate(date = ymd_hm(date)) 
+  mutate(date = ymd_hms(date))
+  round_date(datetimesCond, "10 minutes")
 
 datetimesDepth <- DepthData %>%
-  mutate(date = ymd_hm(date))
+  mutate(date = ymd_hms(date))
+
+CompleteData <- inner_join(datetimesCond,datetimesDepth) %>%
+  mutate(AverageMin = hour(date), minute(date)) %>%
+  group_by()
+  
+  
