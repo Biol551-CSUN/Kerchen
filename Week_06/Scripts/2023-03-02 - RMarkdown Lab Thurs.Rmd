@@ -1,0 +1,91 @@
+---
+author: Mikayla Kerchen
+date: '`r format(Sys.Date())`'
+title: RMarkdown Lab Part 2
+output:
+  prettydoc::html_pretty:
+    theme: hpstr
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE,
+                      warning = FALSE,
+                      fig.path = "../Output/")
+```
+
+# Load Libraries
+
+```{r}
+library(tidyverse)
+library(here)
+library(prettydoc)
+library(kableExtra)
+```
+
+# Load Data
+
+I am loading chemical data from Maunalua, HI.
+
+```{r}
+ChemData <- read.csv(here("Week_06", "Data", "chemicaldata_maunalua.csv"))  # Loads in the data
+
+```
+
+# Inspecting the Data
+
+I am making sure the data was imported properly.
+
+```{r}
+glimpse(ChemData)     # Allows me to view a glimpse of the data
+```
+
+# Plotting Data
+
+This plot represents the *Temperature* plotted against the *Salinity*. They are grouped by the **Season** they were measured in.
+
+```{r ChemPlotLab, fig.align='center', fig.cap= "Figure 1: A violin plot comparing temperature and salinity based on the season they were measured."}
+ChemData %>%
+  ggplot(aes(x = Temp_in,           # Makes a plot of Temperature and Salinity grouped by Season
+             y = Salinity,
+             fill = Season))+
+  geom_violin()+                    # Makes a violin plot
+  facet_wrap(~Season)+              # Wraps the data according to season
+  labs(x = "Temperature",            # Adds pretty names to my plot
+       y = "Salinity",
+       title = "Temperature vs. Salinity",
+       subtitle = "Based on Season")+
+  theme_bw()+
+  theme(axis.title = element_text(size = 12,             # Changes the size, color, face, and horizontal adjustment of the plot
+                                  color = "black"),
+        plot.title = element_text(size = 14,
+                                  color = "black",
+                                  hjust = 0.5),
+        plot.subtitle = element_text(size = 12,
+                                     color = "black",
+                                     face = "italic",
+                                     hjust = 0.5))+
+  scale_fill_viridis_d()                               # Uses the viridis color pallete 
+
+ggsave(here("Week_06", "Output", "ChemPlot_Lab.png"),
+       width = 7, height = 5)
+```
+
+# Making a Table
+
+I will create a table for the data using:
+
+-   Mean temperature
+-   Mean salinity
+-   Tide_time
+
+```{r}
+ChemData%>%
+  group_by(Tide_time) %>%     # Groups data by Tide_time
+  summarize(mean_temp = mean(Temp_in, na.rm = TRUE),           # Calculates the mean of the temperature and salinity
+            mean_salinity = mean(Salinity, na.rm = TRUE)) %>%
+  kbl(col.names = c("Tide_Time", "Mean Temperature", "Mean Salinity")) %>% # Makes it a kable table and adds column names
+  kable_classic() %>%     # Changes the theme of the table
+  row_spec(0, bold = T, color = "white", background = "#008080") %>%   # Changes the text, font, color, and background
+  kable_styling(full_width = FALSE)
+```
