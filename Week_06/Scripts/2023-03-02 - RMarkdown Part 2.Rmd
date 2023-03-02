@@ -1,0 +1,82 @@
+---
+title: "RMarkdown Part 2"
+author: "Mikayla Kerchen"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+  toc: TRUE
+  toc_float: TRUE
+  theme: hpstr
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      fig.path = "../Output/")
+```
+
+# Loading Libraries
+
+```{r}
+library(tidyverse)
+library(here)
+library(palmerpenguins)
+library(kableExtra)
+library(prettydoc)
+```
+
+# Inspect the Data
+
+```{r}
+glimpse(penguins) # Looks at the penguin data
+```
+
+# Making a Plot
+
+```{r penguin, fig.asp=1.2, fig.align='center', fig.cap="This is my penguin figure", dev='pdf', echo=FALSE}
+penguins %>%
+  ggplot(aes(x = bill_length_mm,
+             y = bill_depth_mm,
+             fill = species))+
+  geom_boxplot()+
+  labs( x = "Bill Length (mm)",
+        y = "Bill Depth (mm)",
+        fill = "Species",
+        title = "Penguins Plot")
+
+# fig.align: changes the orientation of the figure on the document
+# fig.cap: adds a caption to the figure
+# fig.asp: changes the aspect ratio of the figure
+# fig.height: changes the height pf the figure
+# fig.length: changes the length of the figure
+# dev: changes the file type of the figure. Ex: to a PDF instead of a PNG
+# echo = FALSE: just shows the figure with no code
+
+```
+
+# Making a Table
+
+Here is a table made in the RMarkdown language:
+
+| Time   | Session | Topic   |
+|:-------|:-------:|--------:|
+| _left_ | _center_| _right_ |
+| 01:00  | 1       | Anatomy |
+| 02:00  |         | *Break* |
+| 03:00  | 2       | Tables  |
+| 04:00  |         | *Break* |
+
+Here is a table made using a package in R:
+
+```{r}
+penguins %>%
+  group_by(species) %>%
+  summarize(billmean = mean(bill_length_mm, na.rm = TRUE)) %>%
+  kbl() %>%   # Makes it a kable table
+  kable_classic() %>%     # Changes the theme of the table
+  row_spec(2, bold = T, color = "white", background = "red") %>%   # Changes the text, font, color, and background
+  kable_styling(full_width = FALSE)  # Shortens the table so it isn't so long
+```
+
+# 
