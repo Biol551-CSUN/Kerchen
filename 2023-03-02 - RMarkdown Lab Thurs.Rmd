@@ -15,6 +15,7 @@ knitr::opts_chunk$set(echo = TRUE,
 ```
 
 # Load Libraries
+
 ```{r}
 library(tidyverse)
 library(here)
@@ -24,7 +25,8 @@ library(kableExtra)
 
 # Load Data
 
-I am loading chemical data from Maunalua, HI. 
+I am loading chemical data from Maunalua, HI.
+
 ```{r}
 ChemData <- read.csv(here("Week_06", "Data", "chemicaldata_maunalua.csv"))  # Loads in the data
 
@@ -33,15 +35,16 @@ ChemData <- read.csv(here("Week_06", "Data", "chemicaldata_maunalua.csv"))  # Lo
 # Inspecting the Data
 
 I am making sure the data was imported properly.
+
 ```{r}
 glimpse(ChemData)     # Allows me to view a glimpse of the data
 ```
 
-# Plotting Data 
+# Plotting Data
 
 This plot represents the *Temperature* plotted against the *Salinity*. They are grouped by the **Season** they were measured in.
 
-```{r, fig.align='center', fig.cap= "Figure 1: A violin plot comparing temperature and salinity based on the season they were measured."}
+```{r ChemPlotLab, fig.align='center', fig.cap= "Figure 1: A violin plot comparing temperature and salinity based on the season they were measured."}
 ChemData %>%
   ggplot(aes(x = Temp_in,           # Makes a plot of Temperature and Salinity grouped by Season
              y = Salinity,
@@ -70,9 +73,9 @@ ChemData %>%
 
 I will create a table for the data using:
 
-* Mean temperature
-* Mean salinity
-* Tide_time
+-   Mean temperature
+-   Mean salinity
+-   Tide_time
 
 ```{r}
 ChemData%>%
@@ -84,5 +87,3 @@ ChemData%>%
   row_spec(0, bold = T, color = "white", background = "#008080") %>%   # Changes the text, font, color, and background
   kable_styling(full_width = FALSE)
 ```
-
-
