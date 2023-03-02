@@ -67,6 +67,8 @@ ChemData %>%
                                      hjust = 0.5))+
   scale_fill_viridis_d()                               # Uses the viridis color pallete 
 
+ggsave(here("Week_06", "Output", "ChemPlot_Lab.png"),
+       width = 7, height = 5)
 ```
 
 # Making a Table
