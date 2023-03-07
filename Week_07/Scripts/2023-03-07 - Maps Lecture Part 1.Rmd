@@ -1,0 +1,122 @@
+---
+title: "2023-03-07 - Maps Lecture"
+author: "Mikayla Kerchen"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc_float: TRUE
+    theme: darkly
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE,
+                      warning = FALSE)
+```
+
+# Load Libraries
+
+```{r}
+library(tidyverse)
+library(here)
+library(maps)
+library(mapdata)
+library(mapproj)
+```
+
+# Load Data
+
+```{r}
+popdata <- read_csv(here("Week_07", "Data", "CApopdata.csv"))
+
+c_stars <- read.csv(here("Week_07", "Data", "stars.csv"))
+```
+
+# Collect Data for Different Maps
+
+```{r}
+world <- map_data("world")   # get data for the entire world
+
+head(world)
+
+usa <- map_data("usa")      # get data for the USA
+
+head(usa)
+
+italy <- map_data("italy")  # get data for Italy
+
+head(italy)
+
+states <- map_data("state")  # get data for the states (US)
+
+head(states)
+
+counties<-map_data("county")  # get data for the counties (US)
+
+head(counties)
+```
+ 
+# Make a Map of the World
+
+```{r}
+ggplot()+
+  geom_polygon(data = world, 
+               aes(x = long, y = lat, 
+                   group = group,
+                   fill = region),
+               color = "black") +
+  guides(fill = FALSE)+ # Gets rid of the legend with all the regions/colors
+  theme_minimal()+
+  theme(panel.background = element_rect(fill = "lightblue"))+ # Colors back of the plot
+  coord_map(projection = "mercator",       # Makes plot flat
+            xlim = c(-180,180))            # Using sinusoidal makes the map more globe shaped
+```
+
+# Map of Califnornia
+
+```{r}
+head(states)
+
+CA_data <- states %>%
+  filter(region == "california")
+
+ggplot()+
+  geom_polygon(data = CA_data, 
+               aes(x = long, y = lat,
+                  group = group),
+              color = "black")+
+  coord_map()+
+  theme_void()
+```
+
+
+# Adding Layers of Data
+```{r}
+CApop_county<-popdata %>%
+  select("subregion" = County, Population)  %>% # rename the county column
+  inner_join(counties) %>%
+  filter(region == "california") # some counties have same names in other states
+```
+
+
+# Making New CA Plot
+```{r}
+ggplot()+
+geom_polygon(data = CApop_county, 
+             aes(x = long, 
+                 y = lat, 
+                 group = group,
+                 fill = Population),
+             color = "black")+
+  geom_point(data = c_stars,
+             aes(x = long,
+                 y = lat,
+                 size = star_no))+
+  coord_map()+
+  theme_void()+
+  scale_fill_gradient(trans = "log10")+
+  labs(size = "# stars/m2")
+
+ggsave(here("Week_07", "Output", "CApop.pdf"))
+```
+
