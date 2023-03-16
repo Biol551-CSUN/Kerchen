@@ -1,0 +1,66 @@
+---
+title: "Good Plot/ Bad Plot"
+author: "Mikayla Kerchen"
+date: "`r Sys.Date()`"
+output: 
+  prettydoc::html_pretty:
+    theme: cayman
+---
+
+
+```{r setup, include=FALSE,warning=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Load Libraries
+
+```{r, echo=TRUE, message=FALSE}
+library(tidyverse)
+library(here)
+library(readr)
+library(usmap)
+```
+
+## Load Data
+
+```{r, echo=TRUE}
+
+Bigfoot_Data <- read.csv(url("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-09-13/bigfoot.csv"))
+
+Bigfoot_Data_Clean <- Bigfoot_Data %>%
+  drop_na
+
+glimpse(Bigfoot_Data_Clean)
+
+```
+
+
+## Bad plot
+
+```{r, echo=TRUE, warning=FALSE}
+Bigfoot_Data_Clean %>%
+  ggplot(aes(x= state, y=number, fill=state)) +
+  geom_histogram(stat="identity", width=5)
+```
+
+## What went wrong?
+What rules did I break?
+
+## Good Plot
+
+```{r}
+plot_usmap(data = Bigfoot_Data_Clean,           
+           values = "number",  
+           regions = "states",
+           exclude = ("HI"),
+           color = "darkgreen")+
+  labs(title = "Bigfoot Sightings in the United States",         
+       subtitle = "Number of Sightings per State")+
+  theme(panel.background = element_blank(),           
+        legend.position = "right",
+        )+
+  scale_fill_continuous(low = "white", high = "darkgreen", name = "Number of Sightings")
+```
+
+
+
