@@ -28,7 +28,8 @@ library(usmap)
 Bigfoot_Data <- read.csv(url("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-09-13/bigfoot.csv"))
 
 Bigfoot_Data_Clean <- Bigfoot_Data %>%
-  drop_na
+  drop_na %>%
+  mutate(avg_temp = (temperature_high + temperature_mid +temperature_low)/3)
 
 glimpse(Bigfoot_Data_Clean)
 
@@ -39,7 +40,7 @@ glimpse(Bigfoot_Data_Clean)
 
 ```{r, echo=TRUE, warning=FALSE}
 Bigfoot_Data_Clean %>%
-  ggplot(aes(x= state, y=number, fill=state)) +
+  ggplot(aes(x= state, y=avg_temp, fill=state)) +
   geom_histogram(stat="identity", width=5)
 ```
 
@@ -50,16 +51,16 @@ What rules did I break?
 
 ```{r}
 plot_usmap(data = Bigfoot_Data_Clean,           
-           values = "number",  
+           values = "avg_temp",  
            regions = "states",
            exclude = ("HI"),
-           color = "darkgreen")+
+           color = "black")+
   labs(title = "Bigfoot Sightings in the United States",         
-       subtitle = "Number of Sightings per State")+
+       subtitle = "Average Temperature During Sightings per State")+
   theme(panel.background = element_blank(),           
         legend.position = "right",
         )+
-  scale_fill_continuous(low = "white", high = "darkgreen", name = "Number of Sightings")
+  scale_fill_continuous(low = "white", high = "red", name = "Average Temperature")
 ```
 
 
