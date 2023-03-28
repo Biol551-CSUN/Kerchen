@@ -91,3 +91,10 @@ ggplot(aes(x = body_mass_g,
   anim_save(here("Week_08","Output","mypengiungif.gif"))
 ```
 
+# Magick
+```{r}
+penguin<-image_read("https://pngimg.com/uploads/penguin/pinguin_PNG9.png")
+penguin
+
+```
+
