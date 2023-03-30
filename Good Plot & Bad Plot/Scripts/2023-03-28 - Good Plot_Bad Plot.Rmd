@@ -30,7 +30,7 @@ glimpse(Honey_Data)
 
 ## Bad plot
 
-```{r, echo=TRUE, results='markup'}
+```{r, echo=TRUE, results='hide'}
 Honey_Data %>%
   ggplot(aes(x = priceperlb,
             y = yieldpercol,
@@ -63,7 +63,8 @@ beeout
 * Too many bars that are unable to be differentiated from one another
 * No neat labels
 * An image that doesn't add anything to the plot
-* Unnecessary colors
+* Unnecessary colors that distract the viewer from the plot
+* Legend is not very useful when columns are not easily visible
 
 ## Good Plot
 
@@ -94,4 +95,5 @@ Honey_Data %>%
 * Clearer data points
 * Neater labels
 * No unecessary images or colors to distract from the plot
+* A more useful legend
 
