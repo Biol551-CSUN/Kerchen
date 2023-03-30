@@ -3,15 +3,17 @@ title: "Good Plot/Bad Plot"
 author: "Mikayla Kerchen"
 date: "`r Sys.Date()`"
 output: 
-  prettydoc::html_pretty:
-    theme: cayman
+   html_document:
+    toc_float: TRUE
+    theme: cerulean
 ---
- 
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## Load Libraries
+
 ```{r, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(here)
@@ -21,16 +23,16 @@ library(magick)
 ```
 
 ## Load Data
+
 ```{r}
 Honey_Data <- read.csv(here("Good Plot & Bad Plot", "Data", "honeyproduction.csv"))
 
 glimpse(Honey_Data)
 ```
 
-
 ## Bad plot
 
-```{r, echo=TRUE, results='markup'}
+```{r, echo=TRUE, results='hide'}
 Honey_Data %>%
   ggplot(aes(x = priceperlb,
             y = yieldpercol,
@@ -46,7 +48,6 @@ Honey_Data %>%
         plot.title = element_text(color = "#ac8405"))
 ```
 
-
 ```{r, message=FALSE}
 ggsave(here("Good Plot & Bad Plot", "Output", "BeePlot.png"))
 
@@ -57,13 +58,13 @@ beeout <- image_composite(beeplot, bee, offset = "+950+500")
 beeout 
 ```
 
-## What Makes the Bad Plot so __bad__?
+## What Makes the Bad Plot so **bad**?
 
-* No visible story to tell with the data
-* Too many bars that are unable to be differentiated from one another
-* No neat labels
-* An image that doesn't add anything to the plot
-* Unnecessary colors
+-   No visible story to tell with the data
+-   Too many bars that are unable to be differentiated from one another
+-   No neat labels
+-   An image that doesn't add anything to the plot
+-   Unnecessary colors
 
 ## Good Plot
 
@@ -86,12 +87,13 @@ Honey_Data %>%
   ease_aes("cubic-in-out") +
   ggtitle('Honey Production in the United States',
           subtitle = 'Year: {closest_state}')
+
+anim_save(here("Good Plot & Bad Plot", "Output", "Goodplot.gif"))
 ```
 
 ## Why is This Plot so Much *better*?
 
-* Has a story to tell with the data (animated by year)
-* Clearer data points
-* Neater labels
-* No unecessary images or colors to distract from the plot
-
+-   Has a story to tell with the data (animated by year)
+-   Clearer data points
+-   Neater labels
+-   No unecessary images or colors to distract from the plot
