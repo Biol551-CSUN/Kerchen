@@ -60,20 +60,13 @@ beeout
 
 ## What Makes the Bad Plot so **bad**?
 
-<<<<<<< HEAD
--   No visible story to tell with the data
--   Too many bars that are unable to be differentiated from one another
--   No neat labels
--   An image that doesn't add anything to the plot
--   Unnecessary colors
-=======
 * No visible story to tell with the data
 * Too many bars that are unable to be differentiated from one another
 * No neat labels
 * An image that doesn't add anything to the plot
 * Unnecessary colors that distract the viewer from the plot
 * Legend is not very useful when columns are not easily visible
->>>>>>> 988b93a2d058f543d0b737e45bb0c5a21e12a2df
+
 
 ## Good Plot
 
@@ -102,16 +95,8 @@ anim_save(here("Good Plot & Bad Plot", "Output", "Goodplot.gif"))
 
 ## Why is This Plot so Much *better*?
 
-<<<<<<< HEAD
--   Has a story to tell with the data (animated by year)
--   Clearer data points
--   Neater labels
--   No unecessary images or colors to distract from the plot
-=======
 * Has a story to tell with the data (animated by year)
 * Clearer data points
 * Neater labels
 * No unecessary images or colors to distract from the plot
 * A more useful legend
-
->>>>>>> 988b93a2d058f543d0b737e45bb0c5a21e12a2df
