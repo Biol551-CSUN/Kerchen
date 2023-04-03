@@ -24,6 +24,7 @@ library(magick)
 ## Load Data
 
 ```{r}
+# Read in the data from Tidy Tuesday repository
 Honey_Data <- read.csv(here("Good Plot & Bad Plot", "Data", "honeyproduction.csv"))
 
 glimpse(Honey_Data)
@@ -33,13 +34,13 @@ glimpse(Honey_Data)
 
 ```{r echo=TRUE, results='hide'}
 Honey_Data %>%
-  ggplot(aes(x = priceperlb,
+  ggplot(aes(x = priceperlb,   
             y = yieldpercol,
             fill = year)) + 
-  geom_col()+
-  labs(title = "honey prod.")+
-  scale_fill_gradient(low = "yellow", high = "#ac8405")+
-  theme(panel.background = element_rect(fill = "#43382f"),
+  geom_col()+                 # Makes a column plot
+  labs(title = "honey prod.")+         # Adds a title
+  scale_fill_gradient(low = "yellow", high = "#ac8405")+   # Editing the colors of the gradient 
+  theme(panel.background = element_rect(fill = "#43382f"),   # Edits the colors of the plot
         plot.background = element_rect(fill = "#43382f"),
         axis.title.x = element_text(color = "#ac8405"),
         axis.title.y = element_text(color = "#ac8405"),
@@ -49,12 +50,15 @@ Honey_Data %>%
 
 ```{r, message=FALSE}
 ggsave(here("Good Plot & Bad Plot", "Output", "BeePlot.png"))
-
+# Saves the image of the bad plot
+ 
 bee <- image_read(here("Good Plot & Bad Plot","Output","Bee.png"))
+# Adding image of Barry from Bee Movie
 
 beeplot<-image_read(here("Good Plot & Bad Plot","Output","BeePlot.png"))
 beeout <- image_composite(beeplot, bee, offset = "+950+450")
 beeout 
+# Combined the plot image and the image of Barry
 ```
 
 ## What Makes the Bad Plot so **bad**?
@@ -71,25 +75,26 @@ beeout
 
 ```{r}
 Honey_Data %>%
-  mutate(numcol = numcol/1000) %>%
-  ggplot(aes(x = yieldpercol,
+  mutate(numcol = numcol/1000) %>%  # Divided the number of colonys by 1000
+  ggplot(aes(x = yieldpercol,   
              y = priceperlb,
              size = numcol)) +
-  geom_point(alpha=0.7,
+  geom_point(alpha=0.7,             # Allows the points to be see-through
              color ="#ac8405") +
-  coord_flip()+
+  coord_flip()+                     # Flips the coordinate plane
   scale_size(range = c(1.4, 13), name="Number of Colonies (per thousand)") +
-  theme(legend.position="bottom") +
-  labs(x = "Yield per Colony",
+  theme(legend.position="bottom") +   # Places the legend at the bottom
+  labs(x = "Yield per Colony",        # Adds nice titles to the plot
        y = "Price per Pound (lb.)") +
-  transition_states(year,
+  transition_states(year,             # Animates the plot by year
      transition_length = 10, 
      state_length = 10)+
-  ease_aes("cubic-in-out") +
-  ggtitle('Honey Production in the United States',
+  ease_aes("cubic-in-out") +          # Edits the transition between points moving
+  ggtitle('Honey Production in the United States',   # Adds title and subtitle to the animation
           subtitle = 'Year: {closest_state}')
 
 #anim_save(here("Good Plot & Bad Plot", "Output", "Goodplot.gif"))
+# Saves the animation
 ```
 
 ## Why is This Plot so Much *better*?
