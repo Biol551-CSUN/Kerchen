@@ -1,0 +1,106 @@
+---
+title: "2023-04-04 - Functions Lecture"
+author: "Mikayla Kerchen"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Load Libraries
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(palmerpenguins)
+library(PNWColors)
+```
+
+# Why Functions?
+
+```{r}
+df <- tibble::tibble(
+  a = rnorm(10),
+  b = rnorm(10),
+  c = rnorm(10),
+  d = rnorm(10)
+)
+
+head(df)
+
+df <- df %>%
+  mutate(a =(a-min(a, na.rm = TRUE))/(max(a, na.rm = TRUE)-min(a,na.rm = TRUE)),
+         b =(b-min(b, na.rm = TRUE))/(max(b, na.rm = TRUE)-min(b,na.rm = TRUE)),
+         c =(a-min(c, na.rm = TRUE))/(max(c, na.rm = TRUE)-min(c,na.rm = TRUE)),
+         d =(d-min(d, na.rm = TRUE))/(max(d, na.rm = TRUE)-min(d,na.rm = TRUE)))
+```
+
+# Make a Function
+
+```{r}
+Temp_F_to_C <- function(temp_F) { 
+  temp_C <- (temp_F - 32) * 5 / 9 
+  return(temp_C)
+}
+
+Temp_F_to_C(32)
+
+```
+
+# Think Pair Share
+
+```{r}
+Temp_C_to_K <- function(temp_C) {
+  Temp_K <- (temp_C + 273.15)
+  return(temp_K)
+}
+
+```
+
+# Making Plots into a Function
+
+```{r}
+myplot <- function(data = penguins, x, y) {
+pal <- pnw_palette("Lake",3, type = "discrete") # My color palette
+
+ggplot(penguins, aes(x = {{x}}, y = {{y}}, color = island))+
+  geom_point()+
+  geom_smooth(method = "lm")+ # add a linear model
+  scale_color_manual("Island", values=pal)+   # use pretty colors and change the legend title
+  theme_bw()
+
+}
+
+myplot(x = body_mass_g, y = bill_length_mm)+
+  labs(x = "Body mass (g)",
+       y = "Flipper length (mm)")
+# You can change out the x and y values
+```
+
+# Adding an If-else Statement
+
+```{r}
+myplot1 <- function(data = penguins, x, y, lines = TRUE) {
+pal <- pnw_palette("Lake",3, type = "discrete") # My color palette
+
+if(lines==TRUE){
+ggplot(data, aes(x = {{x}}, y = {{y}} , color = island))+
+  geom_point()+
+  geom_smooth(method = "lm")+ # add a linear model
+  scale_color_manual("Island", values=pal)+   # use pretty colors and change the legend title
+  theme_bw()
+}
+else{
+ggplot(data, aes(x = {{x}}, y = {{y}} , color = island))+
+  geom_point()+
+  scale_color_manual("Island", values=pal)+   # use pretty colors and change the legend title
+  theme_bw()
+}
+}
+
+myplot1(x = body_mass_g, y = flipper_length_mm)
+
+myplot1(x = body_mass_g, y = flipper_length_mm, lines = FALSE)
+```
+
