@@ -1,0 +1,58 @@
+---
+title: "Independent Project"
+subtitle: "Comparison of Cat and Dog Owners Across the United States"
+author: "Mikayla Kerchen"
+institute: "CSUN"
+date: "2016/12/12 (updated: `r Sys.Date()`)"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+# Load Libraries
+
+```{r, message=FALSE}
+library(tidyverse)
+library(here)
+library(usmap)
+```
+
+---
+
+# Introduction to the Data Set
+
+- The data was received from the Tidy Tuesday Repository
+- The data frame includes cat and dog owner data from the United States
+
+.pull-center[
+```{r}
+CatvDog_Data <- read.csv(here("Independent Project", "Data", "cats_vs_dogs.csv"))
+```
+]
+---
+
+# Cat Owner Percentage in the United States
+
+.pull-left[
+```{r, CatPercentPlot, eval= FALSE, message=FALSE}
+plot_usmap(data = CatvDog_Data,           
+           values = "percent_cat_owners",  
+           regions = "states",
+           exclude = c("AK", "HI"),       
+           color = "black")+
+  labs(title = "Cat Owners of the United States",         
+       subtitle = "Percentage of Cat Owners by State")+
+  theme(panel.background = element_blank(),             
+        legend.position = "right")+
+  scale_fill_continuous(low = "white", high = "blue", name = "Percentage of Cat Owners")
+```
+]
+
+.pull-right[
+```{r CatPercentPlot-out, ref.label="CatPercentPlot", echo=FALSE, message=FALSE, warning=FALSE, out.width= '300px'}
+```
+]
