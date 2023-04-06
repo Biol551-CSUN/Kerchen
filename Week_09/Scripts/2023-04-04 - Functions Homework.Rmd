@@ -22,6 +22,8 @@ library(PNWColors)
 
 # Load Data
 
+I loaded data of the amount of cat and dog owners in the United States. It is a Tidy Tuesday data set.
+
 ```{r}
 
 CatvDog_Data <- read.csv(here("Week_09", "Data", "cats_vs_dogs.csv"))
@@ -31,6 +33,8 @@ View(CatvDog_Data)
 
 # Function for Averages
 
+I made a function to calculate the average amount of cat households per state.
+
 ```{r}
 Average_Cat <- function(n_cat_households) {
   Cat_house_avg <- (n_cat_households/49) 
@@ -38,6 +42,8 @@ Average_Cat <- function(n_cat_households) {
 }
 
 Average_Cat(32948) # All the cat households from the data set added together.
+
+Average_Cat(3687) # Average number of cat households in California
 ```
 
 # Function for a Plot
@@ -52,7 +58,11 @@ ggplot(data = CatvDog_Data,
             fill = "#cc7987",    # Color blind friendly color
             color = "black",     # Colors the outlines of the bars
             width = 0.9)+        # Changes the width of the bars
-   coord_flip()           # Flips the coordinate plane
+   coord_flip()+           # Flips the coordinate plane
+   labs(x = "State",                          # Adds pretty names
+       y = "Number of Pet Households",
+       title = "Number of Pet Households in the United States",
+       subtitle = "Per State")
 }
 else{                      # If set to FALSE, makes an ordinary, unordered bar plot
 ggplot(data = CatvDog_Data, 
@@ -61,28 +71,31 @@ ggplot(data = CatvDog_Data,
             fill = "#cc7987",    # Color blind friendly color
             color = "black",     # Colors the outlines of the bars
             width = 0.9)+        # Changes the width of the bars
-   coord_flip()           # Flips the coordinate plane
+   coord_flip()+                 # Flips the coordinate plane
+   labs(x = "State",                          # Adds pretty names
+       y = "Number of Pet Households",
+       title = "Number of Pet Households in the United States",
+       subtitle = "Per State")
+    
 }
 }
 ```
 
 
 # Ordered Bar Plot
-```{r Pet_PlotOrder, out.height=1200, out.width=700}
-Pet_Plot(data, x = state, y = n_pet_households)+
-  labs(x = "State",                          # Adds pretty names
-       y = "Number of Pet Households",
-       title = "Number of Pet Households in the United States",
-       subtitle = "Per State")
+
+This plot shows up with the bars ordered due to order = TRUE.
+
+```{r Pet_PlotOrder, eval=TRUE, out.height=1200, out.width=700}
+Pet_Plot(data, x = state, y = n_pet_households)
 ```
 
 
 # Disordered Bar Plot
-```{r Pet_PlotDisorder, out.height=1200, out.width=700}
-Pet_Plot(data, x = state, y = n_pet_households, order = FALSE)+
-   labs(x = "State",                          # Adds pretty names
-       y = "Number of Pet Households",
-       title = "Number of Pet Households in the United States",
-       subtitle = "Per State")
+
+This plot shows a more disordered plot due to order = FALSE.
+
+```{r Pet_PlotDisorder, eval=TRUE, out.height=1200, out.width=700}
+Pet_Plot(data, x = state, y = n_pet_households, order = FALSE)
 ```
 
