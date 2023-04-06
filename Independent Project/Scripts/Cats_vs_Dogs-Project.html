@@ -25,7 +25,7 @@ class: center, middle, inverse, title-slide
 ### CSUN
 ]
 .date[
-### 2016/12/12 (updated: 2023-04-04)
+### 2016/12/12 (updated: 2023-04-06)
 ]
 
 ---
@@ -45,19 +45,19 @@ library(usmap)
 # Introduction to the Data Set
 
 - The data was received from the Tidy Tuesday Repository
+
 - The data frame includes cat and dog owner data from the United States
 
-.pull-center[
 
 ```r
 CatvDog_Data &lt;- read.csv(here("Independent Project", "Data", "cats_vs_dogs.csv"))
 ```
-]
 ---
 
 # Cat Owner Percentage in the United States
 
-.pull-left[
+- The code below was used to make the plot on the next slide.
+
 
 ```r
 plot_usmap(data = CatvDog_Data,           
@@ -69,13 +69,47 @@ plot_usmap(data = CatvDog_Data,
        subtitle = "Percentage of Cat Owners by State")+
   theme(panel.background = element_blank(),             
         legend.position = "right")+
-  scale_fill_continuous(low = "white", high = "blue", name = "Percentage of Cat Owners")
+  scale_fill_continuous(low = "white", high = "#1F449C", name = "Percentage of Cat Owners")
+```
+
+
+---
+
+# Cat Owner Percentage in the United States
+
+- The plot below displays the percentage of cat owners per state in the United States.
+
+.middle-center[
+&lt;img src="Cats_vs_Dogs-Project_files/figure-html/CatPercentPlot-out-1.png" width="550" /&gt;
+]
+
+---
+
+# Dog Owner Percentage in the United States
+
+- The plot below displays the percentage of cat owners per state in the United States.
+
+.pull-left[
+
+```r
+plot_usmap(data = CatvDog_Data,           # Plots a flat map of the US.
+           values = "percent_dog_owners",  # Uses the data set and plots the percentage data.
+           regions = "states",
+           exclude = c("AK", "HI"),       # Excluding Alaska and Hawaii from the map since there is no data for them.
+           color = "black")+
+  labs(title = "Dog Owners of the United States",         # Adds titles to the plot.
+       subtitle = "Percentage of Dog Owners by State")+
+  theme(panel.background = element_blank(),             # Makes the map blank inside and put the legend to the right.
+        legend.position = "right")+
+  scale_fill_continuous(low = "white", high = "#E57A77", name = "Percentage of Dog Owners")    # Gives a gradient effect in order of how high or low the percentage is.
 ```
 ]
 
 .pull-right[
-&lt;img src="Cats_vs_Dogs-Project_files/figure-html/CatPercentPlot-out-1.png" width="7" /&gt;
+&lt;img src="Cats_vs_Dogs-Project_files/figure-html/DogPercentPlot-out-1.png" width="900" /&gt;
 ]
+
+---
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

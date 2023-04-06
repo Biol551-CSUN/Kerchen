@@ -26,19 +26,19 @@ library(usmap)
 # Introduction to the Data Set
 
 - The data was received from the Tidy Tuesday Repository
+
 - The data frame includes cat and dog owner data from the United States
 
-.pull-center[
 ```{r}
 CatvDog_Data <- read.csv(here("Independent Project", "Data", "cats_vs_dogs.csv"))
 ```
-]
 ---
 
 # Cat Owner Percentage in the United States
 
-.pull-left[
-```{r, CatPercentPlot, eval= FALSE, message=FALSE}
+- The code below was used to make the plot on the next slide.
+
+```{r CatPercentPlot, eval= FALSE, message=FALSE}
 plot_usmap(data = CatvDog_Data,           
            values = "percent_cat_owners",  
            regions = "states",
@@ -48,11 +48,45 @@ plot_usmap(data = CatvDog_Data,
        subtitle = "Percentage of Cat Owners by State")+
   theme(panel.background = element_blank(),             
         legend.position = "right")+
-  scale_fill_continuous(low = "white", high = "blue", name = "Percentage of Cat Owners")
+  scale_fill_continuous(low = "white", high = "#1F449C", name = "Percentage of Cat Owners")
+```
+
+
+---
+
+# Cat Owner Percentage in the United States
+
+- The plot below displays the percentage of cat owners per state in the United States.
+
+.-center[
+```{r CatPercentPlot-out, ref.label="CatPercentPlot", echo=FALSE, message=FALSE, warning=FALSE, out.width= '550'}
+```
+]
+
+---
+
+# Dog Owner Percentage in the United States
+
+- The plot below displays the percentage of cat owners per state in the United States.
+
+.pull-left[
+```{r DogPercentPlot, eval= FALSE, message=FALSE}
+plot_usmap(data = CatvDog_Data,           # Plots a flat map of the US.
+           values = "percent_dog_owners",  # Uses the data set and plots the percentage data.
+           regions = "states",
+           exclude = c("AK", "HI"),       # Excluding Alaska and Hawaii from the map since there is no data for them.
+           color = "black")+
+  labs(title = "Dog Owners of the United States",         # Adds titles to the plot.
+       subtitle = "Percentage of Dog Owners by State")+
+  theme(panel.background = element_blank(),             # Makes the map blank inside and put the legend to the right.
+        legend.position = "right")+
+  scale_fill_continuous(low = "white", high = "#E57A77", name = "Percentage of Dog Owners")    # Gives a gradient effect in order of how high or low the percentage is.
 ```
 ]
 
 .pull-right[
-```{r CatPercentPlot-out, ref.label="CatPercentPlot", echo=FALSE, message=FALSE, warning=FALSE, out.width= '300px'}
+```{r DogPercentPlot-out, ref.label="DogPercentPlot", echo=FALSE, message=FALSE, warning=FALSE, out.width= '900'}
 ```
 ]
+
+---
