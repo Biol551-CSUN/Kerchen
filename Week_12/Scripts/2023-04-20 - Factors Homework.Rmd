@@ -1,0 +1,80 @@
+---
+title: "2023-04-20 - Factors Homework"
+author: "Mikayla Kerchen"
+date: "`r Sys.Date()`"
+output:
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load Libraries
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(here)
+```
+
+## Load Data
+
+```{r}
+IntTidal_Data <- read_csv(here("Week_12", "Data", "intertidaldata.csv"))
+
+View(IntTidal_Data)
+```
+
+## Fixing the Character Data
+
+```{r}
+
+IntTidal_Data_Fixed <- IntTidal_Data %>%
+  mutate(Quadrat = str_replace_all(Quadrat, "[0-9]|\\.", ""),
+         Quadrat = str_trim(Quadrat)) # Removes the extra "1", ".", and white space from the column
+
+glimpse(IntTidal_Data_Fixed)
+```
+
+# Changing Character Columns to a Factor
+
+```{r}
+IntTidal_Data_New <- IntTidal_Data_Fixed %>%
+  mutate(Quadrat = factor(Quadrat, levels = c("Low", "Mid", "High"))) %>%
+  mutate(Site = factor(Site))
+
+glimpse(IntTidal_Data_New)
+```
+
+# Making a Plot and Reordering the Factor 
+
+```{r}
+IntTidal_Data_New %>%
+  mutate(Algae = Algae/100) %>%
+  ggplot(aes(x = fct_reorder(Quadrat, Algae, .desc = TRUE), # Reorders the factor of Quadrat by Algae in descending order (low, mid, high)
+             y = Algae,
+             fill = Site))+ 
+  geom_col() +   # Makes a column plot
+  scale_fill_viridis_d()+    # Color blind friendly palette 
+  labs(x = "Quadrat",
+       y = "Algae (%)",   # Adds labels to the plot
+       title = "Percentage of Algae per Quadrat",
+       subtitle = "By Site")+
+  theme(plot.title = element_text(size = 16,      # Changes the text size, color, face, and adjustment on the plot.
+                                  color = "black",
+                                  face = 'bold',
+                                  hjust = 0.5),
+        plot.subtitle = element_text(size = 14,
+                                     color = "black",
+                                     face = 'italic',
+                                     hjust = 0.5),
+        axis.title = element_text(size = 12,
+                                  color = "black"),
+        legend.title = element_text(size = 12,
+                                   color = "black"),
+        axis.text = element_text(size = 9,
+                                 color = "black"))
+```
+
