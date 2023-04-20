@@ -27,35 +27,46 @@ IntTidal_Data <- read_csv(here("Week_12", "Data", "intertidaldata.csv"))
 View(IntTidal_Data)
 ```
 
+## Changing Column Names 
+
+I am changing the column names to be more clean. I also added percent and count to some columns to specify what the numbers represent.
+```{r}
+colnames(IntTidal_Data) <- c("site", "transect", "quadrat", "bare_rock_percent", "algae_percent", "mussels_percent", "small_barnacles_percent", "large_barnacles_percent", "gooseneck_barnacles_percent", "anemone_percent", "whelks_count", "crabs_count", "stars_count")
+```
+
+
 ## Fixing the Character Data
 
+I removed the "1", ".", and extra white space from the **quadrat** column. I renamed the new data frame as *IntTidal_Data_Fixed*.
 ```{r}
 
 IntTidal_Data_Fixed <- IntTidal_Data %>%
-  mutate(Quadrat = str_replace_all(Quadrat, "[0-9]|\\.", ""),
-         Quadrat = str_trim(Quadrat)) # Removes the extra "1", ".", and white space from the column
+  mutate(quadrat = str_replace_all(quadrat, "[0-9]|\\.", ""), # Removes the extra "1" and "." from the 'Quadrat' column
+         quadrat = str_trim(quadrat))  # Removes white space
 
 glimpse(IntTidal_Data_Fixed)
 ```
 
 # Changing Character Columns to a Factor
 
+I changed the character columns into a factor by using the **mutate()** and **factor()** functions. I also reordered the levels of the *quadrat* column to go from **Low** to **Med** to **High**. I renamed this data frame as *IntTidal_Data_New*.
 ```{r}
-IntTidal_Data_New <- IntTidal_Data_Fixed %>%
-  mutate(Quadrat = factor(Quadrat, levels = c("Low", "Mid", "High"))) %>%
-  mutate(Site = factor(Site))
+IntTidal_Data_New <- IntTidal_Data_Fixed %>% # Making a new Data Frame for the factors
+  mutate(quadrat = factor(quadrat, levels = c("Low", "Mid", "High"))) %>%  # Making the column 'Quadrat' a factor and ordering the levels from Low to Mid to High
+  mutate(site = factor(site))  # Making the column 'Site' a factor
 
 glimpse(IntTidal_Data_New)
 ```
 
 # Making a Plot and Reordering the Factor 
 
+I used the new data frame to make a column plot. I first mutated the *algae_percent* column by 100 so the numbers would show up as percentages on the plot. I used *fct_reorder* to reorder the tide levels so they would show from **Low** to **Med** to **High**.  
 ```{r}
 IntTidal_Data_New %>%
-  mutate(Algae = Algae/100) %>%
-  ggplot(aes(x = fct_reorder(Quadrat, Algae, .desc = TRUE), # Reorders the factor of Quadrat by Algae in descending order (low, mid, high)
-             y = Algae,
-             fill = Site))+ 
+  mutate(algae_percent = algae_percent/100) %>%
+  ggplot(aes(x = fct_reorder(quadrat, algae_percent, .desc = TRUE), # Reorders the factor of Quadrat by Algae in descending order (low, mid, high)
+             y = algae_percent,
+             fill = site))+ 
   geom_col() +   # Makes a column plot
   scale_fill_viridis_d()+    # Color blind friendly palette 
   labs(x = "Quadrat",
