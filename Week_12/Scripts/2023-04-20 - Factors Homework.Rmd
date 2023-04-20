@@ -72,7 +72,8 @@ IntTidal_Data_New %>%
   labs(x = "Quadrat",
        y = "Algae (%)",   # Adds labels to the plot
        title = "Percentage of Algae per Quadrat",
-       subtitle = "By Site")+
+       subtitle = "By Site",
+       fill = "Site")+
   theme(plot.title = element_text(size = 16,      # Changes the text size, color, face, and adjustment on the plot.
                                   color = "black",
                                   face = 'bold',
@@ -87,5 +88,12 @@ IntTidal_Data_New %>%
                                    color = "black"),
         axis.text = element_text(size = 9,
                                  color = "black"))
+```
+
+## Saving the Plot
+
+```{r}
+ggsave(here("Week_12", "Output", "Intertidal_Factor_Plot.png"),
+       width = 8, height = 7)
 ```
 
