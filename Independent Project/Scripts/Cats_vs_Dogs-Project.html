@@ -6,7 +6,8 @@
     <meta name="author" content="Mikayla Kerchen" />
     <script src="libs/header-attrs-2.20/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
-    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
   </head>
   <body>
     <textarea id="source">
@@ -25,7 +26,7 @@ class: center, middle, inverse, title-slide
 ### CSUN
 ]
 .date[
-### 2016/12/12 (updated: 2023-04-06)
+### 2016/12/12 (updated: 2023-04-25)
 ]
 
 ---
@@ -38,6 +39,11 @@ class: center, middle, inverse, title-slide
 library(tidyverse)
 library(here)
 library(usmap)
+library(reshape2)
+```
+
+```
+## Warning: package 'reshape2' was built under R version 4.2.3
 ```
 
 ---
@@ -46,7 +52,11 @@ library(usmap)
 
 - The data was received from the Tidy Tuesday Repository
 
+--
+
 - The data frame includes cat and dog owner data from the United States
+
+--
 
 
 ```r
@@ -56,7 +66,9 @@ CatvDog_Data &lt;- read.csv(here("Independent Project", "Data", "cats_vs_dogs.cs
 
 # Cat Owner Percentage in the United States
 
-- The code below was used to make the plot on the next slide.
+- This is the code I used to make the plot on the next slide.
+
+--
 
 
 ```r
@@ -69,7 +81,7 @@ plot_usmap(data = CatvDog_Data,
        subtitle = "Percentage of Cat Owners by State")+
   theme(panel.background = element_blank(),             
         legend.position = "right")+
-  scale_fill_continuous(low = "white", high = "#1F449C", name = "Percentage of Cat Owners")
+  scale_fill_continuous(low = "white", high = "blue", name = "Percentage of Cat Owners")
 ```
 
 
@@ -79,17 +91,24 @@ plot_usmap(data = CatvDog_Data,
 
 - The plot below displays the percentage of cat owners per state in the United States.
 
-.middle-center[
-&lt;img src="Cats_vs_Dogs-Project_files/figure-html/CatPercentPlot-out-1.png" width="550" /&gt;
+--
+
+- It only includes the continental states due to lacking data from Alaska and Hawaii.
+
+--
+
+.center[
+&lt;img src="Cats_vs_Dogs-Project_files/figure-html/CatPercentPlot-out-1.png" width="500" /&gt;
 ]
 
 ---
 
 # Dog Owner Percentage in the United States
 
-- The plot below displays the percentage of cat owners per state in the United States.
+- This is the code I used to make the plot on the next slide.
 
-.pull-left[
+--
+
 
 ```r
 plot_usmap(data = CatvDog_Data,           # Plots a flat map of the US.
@@ -101,15 +120,44 @@ plot_usmap(data = CatvDog_Data,           # Plots a flat map of the US.
        subtitle = "Percentage of Dog Owners by State")+
   theme(panel.background = element_blank(),             # Makes the map blank inside and put the legend to the right.
         legend.position = "right")+
-  scale_fill_continuous(low = "white", high = "#E57A77", name = "Percentage of Dog Owners")    # Gives a gradient effect in order of how high or low the percentage is.
+  scale_fill_continuous(low = "white", high = "red", name = "Percentage of Dog Owners")    # Gives a gradient effect in order of how high or low the percentage is.
 ```
-]
 
-.pull-right[
-&lt;img src="Cats_vs_Dogs-Project_files/figure-html/DogPercentPlot-out-1.png" width="900" /&gt;
+---
+
+# Dog Owner Percentage in the United States
+
+- The plot below displays the percentage of dog owners per state in the United States.
+
+--
+
+- Like the plot before, this only contains the continental states due to lacking data from Alaska and Hawaii.
+
+--
+
+.center[
+&lt;img src="Cats_vs_Dogs-Project_files/figure-html/DogPercentPlot-out-1.png" width="500" /&gt;
 ]
 
 ---
+
+# Comparing Number of Dog and Cat Households by State
+
+
+
+
+
+```r
+CatvDog_Data_Bar %&gt;%
+  ggplot(aes(x = state,
+             y = value))+
+  geom_bar(aes(fill = variable), stat = "identity", position = "dodge")+
+  scale_y_log10()+
+  coord_flip()
+```
+
+![](Cats_vs_Dogs-Project_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
