@@ -1,0 +1,114 @@
+---
+title: "2023-04-25 - Week 13 Homework"
+author: "Mikayla Kerchen"
+date: "`r Sys.Date()`"
+output:
+    prettydoc::html_pretty:
+    theme: hpstr
+    highlight: github
+---
+
+```{r setup, include=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load Libraries 
+
+```{r, message=FALSE}
+library(tidyverse)
+library(here)
+```
+
+## Combining Files Using a For Loop
+
+### List Files in a Directory
+
+```{r}
+HWPath <- here("Week_13", "Data", "homework") # Points a path to the location of the folder
+
+files <- dir(path = HWPath,pattern = ".csv") # Lists all the files in that path with a specific pattern
+
+files
+```
+
+### Pre-allocate Space
+
+```{r}
+Tide_Data<-data.frame(matrix(nrow = length(files), ncol = 5)) # Makes an empty data frame to pre-allocate space
+
+colnames(Tide_Data) <- c("filename","mean_temp", "mean_light", "temp_sd", "light_sd") # Gives column names to the data frame
+
+Tide_Data
+```
+
+### Test by Reading One File
+
+```{r}
+Raw_Data <- read_csv(paste0(HWPath,"/",files[1])) # Test by reading in the first file and see if it works
+
+head(Raw_Data)
+```
+
+### Fill the Space and Calculate Means and SD
+
+```{r, message=FALSE}
+for (i in 1:length(files)){ # Loop over 1:5 the number of files 
+  Raw_Data<-read_csv(paste0(HWPath,"/",files[i]))
+  Tide_Data$filename[i]<-files[i]
+  Tide_Data$mean_temp[i]<-mean(Raw_Data$Temp.C, na.rm =TRUE) # Calculates the mean temperature
+  Tide_Data$mean_light[i]<-mean(Raw_Data$Intensity.lux, na.rm =TRUE) # Calculates the mean light intensity
+  Tide_Data$temp_sd[i] <- sd(Raw_Data$Temp.C, na.rm = TRUE) # Calculates the standard deviation of temperature
+  Tide_Data$light_sd[i] <- sd(Raw_Data$Intensity.lux, na.rm = TRUE) # Calculates the standard deviation of light intensity
+}
+```
+
+
+```{r}
+Tide_Data
+```
+
+## Combining Files Using Map() Function
+
+### Make a Path Location
+
+```{r}
+
+HWPath <- here("Week_13", "Data", "homework") # Points a path to the location of the folder
+
+files <- dir(path = HWPath,pattern = ".csv", full.names = TRUE) # Lists all the files into a specific path using a specific pattern. Keeps the full file name.
+
+files
+
+```
+
+### Read in the Files
+
+```{r, message=FALSE}
+Tide_Data <- files %>%
+  set_names() %>% # Sets the id of each list to the file name
+  map_df(read_csv,.id = "filename") # Map everything to a data frame and put the id in a column called file name
+```
+
+
+```{r}
+Tide_Data
+```
+
+### Calculate Means and SD
+
+```{r, message=FALSE}
+Tide_Data <- files %>%
+  set_names()%>% #Sets the id of each list to the file name
+  map_df(read_csv,.id = "filename") %>% #Map everything to a data frame and put the id in a column called file name
+  group_by(filename) %>%
+  summarise(mean_temp = mean(Temp.C, na.rm = TRUE), # Calculates the mean temperature
+            mean_light = mean(Intensity.lux, na.rm = TRUE), # Calculates the mean light intensity
+            temp_sd = sd(Temp.C, na.rm = TRUE), # Calculates the standard deviation of temperature
+            light_sd = sd(Intensity.lux, na.rm = TRUE)) # Calculates the standard deviation of light intensity
+```
+
+
+```{r}
+Tide_Data
+```
+
