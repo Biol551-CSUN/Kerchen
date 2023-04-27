@@ -2,13 +2,14 @@
 title: "Independent Project"
 subtitle: "Comparison of Cat and Dog Owners Across the United States"
 author: "Mikayla Kerchen"
-institute: "CSUN"
+institute: "BIOL 551"
 date: "2016/12/12 (updated: `r Sys.Date()`)"
 output:
   xaringan::moon_reader:
     css: [default, metropolis, metropolis-fonts]
     lib_dir: libs
     nature:
+      ratio: 16:9
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
@@ -16,7 +17,7 @@ output:
 
 # Load Libraries
 
-```{r, message=FALSE}
+```{r, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(here)
 library(usmap)
@@ -40,12 +41,16 @@ CatvDog_Data <- read.csv(here("Independent Project", "Data", "cats_vs_dogs.csv")
 ```
 ---
 
-# Cat Owner Percentage in the United States
+# Cat Owner Percentage in the U.S.
 
-- This is the code I used to make the plot on the next slide.
+- This plot illustrates the percentage of cat owners in the United States.
 
 --
 
+- This plot only contains data for the continental states due to lacking data for Alaska and Hawaii.
+
+--
+.pull-left[
 ```{r CatPercentPlot, eval= FALSE, message=FALSE}
 plot_usmap(data = CatvDog_Data,           
            values = "percent_cat_owners",  
@@ -58,33 +63,24 @@ plot_usmap(data = CatvDog_Data,
         legend.position = "right")+
   scale_fill_continuous(low = "white", high = "blue", name = "Percentage of Cat Owners")
 ```
-
-
----
-
-# Cat Owner Percentage in the United States
-
-- The plot below displays the percentage of cat owners per state in the United States.
-
---
-
-- It only includes the continental states due to lacking data from Alaska and Hawaii.
-
---
-
-.center[
-```{r CatPercentPlot-out, ref.label="CatPercentPlot", echo=FALSE, message=FALSE, warning=FALSE, out.width= '500'}
+]
+.pull-right[
+```{r CatPercentPlot-out, ref.label="CatPercentPlot", echo=FALSE, message=FALSE, warning=FALSE}
 ```
 ]
-
 ---
 
-# Dog Owner Percentage in the United States
+# Dog Owner Percentage in the U.S.
 
-- This is the code I used to make the plot on the next slide.
+- This plot illustrates the percentage of dog owners in the United States.
 
 --
 
+- Like the plot before, this plot only contains data for the continental states due to lacking data for Alaska and Hawaii.
+
+--
+
+.pull-left[
 ```{r DogPercentPlot, eval= FALSE, message=FALSE}
 plot_usmap(data = CatvDog_Data,           # Plots a flat map of the US.
            values = "percent_dog_owners",  # Uses the data set and plots the percentage data.
@@ -97,39 +93,114 @@ plot_usmap(data = CatvDog_Data,           # Plots a flat map of the US.
         legend.position = "right")+
   scale_fill_continuous(low = "white", high = "red", name = "Percentage of Dog Owners")    # Gives a gradient effect in order of how high or low the percentage is.
 ```
-
----
-
-# Dog Owner Percentage in the United States
-
-- The plot below displays the percentage of dog owners per state in the United States.
-
---
-
-- Like the plot before, this only contains the continental states due to lacking data from Alaska and Hawaii.
-
---
-
-.center[
-```{r DogPercentPlot-out, ref.label="DogPercentPlot", echo=FALSE, message=FALSE, warning=FALSE, out.width= '500'}
+]
+.pull.right[
+```{r DogPercentPlot-out, ref.label="DogPercentPlot", echo=FALSE, message=FALSE, warning=FALSE}
 ```
 ]
 
 ---
 
-# Comparing Number of Dog and Cat Households by State
+# Dog and Cat Households by State
+
+- This next plot is a bar plot that compares the number of dog and cat households per state.
+
+--
+
+- I ordered this plot from the larger amount of dog and cat households to the lowest.
 
 ```{r, echo=FALSE}
 CatvDog_Data_Bar <- melt(CatvDog_Data[,c('state', 'n_dog_households', 'n_cat_households')], id.vars = 1)
 ```
 
+---
 
-```{r}
-CatvDog_Data_Bar %>%
-  ggplot(aes(x = state,
+# Dog and Cat Households by State
+
+.pull-left[
+```{r CatvDogBar, eval=FALSE, message=FALSE}
+CatvDog_Data_Bar %>%     
+  ggplot(aes(x = reorder(state, value), # Reorders the plot from most to least value
              y = value))+
   geom_bar(aes(fill = variable), stat = "identity", position = "dodge")+
-  scale_y_log10()+
-  coord_flip()
+  scale_y_log10()+  # Scales the y-axis by log10
+  coord_flip()+   # Flips the coordinate plane
+  labs(x = "State",   # Gives pretty labels to the plot
+       y = "Number of Households",
+       fill = "Type of Household",
+       title = "Comparison of Number of Dog and Cat Households in the U.S.",
+       subtitle = "Categorized per State")+
+  scale_fill_discrete(labels = c('Dog Household', 'Cat Household'))+   # Re-labels the legend with prettier names (ex: instead of 'n_dog_households' and 'n_cat_households')
+  theme_bw()+   # Standard black and white theme.
+  theme(plot.title = element_text(size = 16,     # Changes the size, color, face, and adjusts the title and subtitle.
+                                  color = "black",
+                                  face = 'bold',
+                                  hjust = 0.5),
+        plot.subtitle = element_text(size = 14,
+                                     color = "black",
+                                     face = 'italic',
+                                     hjust = 0.5),
+        axis.title = element_text(size = 12,      # Chnages the size and color of the axis and legend titles.
+                                  color = "black"),
+        legend.title = element_text(size = 12,
+                                    color = "black"))
 ```
+]
+
+.pull-right[
+```{r CatvDogBar-out, ref.label="CatvDogBar", echo=FALSE, message=FALSE, warning=FALSE}
+```
+]
+
+---
+
+# Dog and Cat Households by State
+
+- As expected, the states with larger populations have the larger amount of both dog and cat households.
+
+--
+
+  - This could have to do with some states having a specific amount of dogs and cats that each household can have.
+
+--
+
+  - Usually goes by county.
+
+--
+
+- From the plot, it appears that more household have dogs compared to cats.
+
+--
+
+  - Except for a few states: 
+
+--
+
+  - Massachusetts
+    
+--
+
+  - Connecticut
+
+--
+
+  - Maine
+
+--
+
+  - and some other mainly east coast states
+  
+--
+---
+
+# Statistics for Dogs vs. Cats
+
+```{r}
+CatvDog_Data_Stats <- CatvDog_Data %>%
+  mutate(mean_cat_population = mean(cat_population),
+         mean_dog_population = mean(dog_population),
+         avg_dogs_per_household = mean(avg_dogs_per_household),
+         avg_cats_per_household = mean(avg_cats_per_household))
+```
+
 
