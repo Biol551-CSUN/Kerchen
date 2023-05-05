@@ -22,6 +22,7 @@ library(tidyverse)
 library(here)
 library(usmap)
 library(reshape2)
+library(kableExtra)
 ```
 
 ---
@@ -101,37 +102,47 @@ plot_usmap(data = CatvDog_Data,           # Plots a flat map of the US.
 
 ---
 
-# Dog and Cat Households by State
+# Dog vs. Cat Households by State
 
-- This next plot is a bar plot that compares the number of dog and cat households per state.
+- This next plot is a diverging bar plot that compares the number of dog and cat households per state.
 
 --
 
-- I ordered this plot from the larger amount of dog and cat households to the lowest.
+- I mutated the data frame to subtract the number of dog households from the number of cat households.
 
-```{r, echo=FALSE}
-CatvDog_Data_Bar <- melt(CatvDog_Data[,c('state', 'n_dog_households', 'n_cat_households')], id.vars = 1)
+--
+
+- The diverging plot shows whether the state has more dog or cat households.
+
+--
+
+  - Dog households are colored red while cat households are colored blue.
+
+```{r}
+CatvDog_Data_Bar <- CatvDog_Data %>%
+  mutate(value = n_dog_households - n_cat_households)
+
+color <- ifelse(CatvDog_Data_Bar$value < 0, "red", "blue")
 ```
 
 ---
 
-# Dog and Cat Households by State
+# Dog vs. Cat Households by State
 
 .pull-left[
 ```{r CatvDogBar, eval=FALSE, message=FALSE}
 CatvDog_Data_Bar %>%     
   ggplot(aes(x = reorder(state, value), # Reorders the plot from most to least value
              y = value))+
-  geom_bar(aes(fill = variable), stat = "identity", position = "dodge")+
-  scale_y_log10()+  # Scales the y-axis by log10
+  geom_bar(aes(fill = color), stat = "identity")+  # Fills the plot with the colors from the ifelse statement
   coord_flip()+   # Flips the coordinate plane
   labs(x = "State",   # Gives pretty labels to the plot
        y = "Number of Households",
        fill = "Type of Household",
-       title = "Comparison of Number of Dog and Cat Households in the U.S.",
-       subtitle = "Categorized per State")+
-  scale_fill_discrete(labels = c('Dog Household', 'Cat Household'))+   # Re-labels the legend with prettier names (ex: instead of 'n_dog_households' and 'n_cat_households')
-  theme_bw()+   # Standard black and white theme.
+       title = "Cats vs. Dogs in the U.S.",
+       subtitle = "Categorized per State")+  
+  theme_minimal()+  # Minimal theme.
+  scale_fill_discrete(labels = c("Dog", "Cat"))+  # Re-labels the legend with prettier names (ex: instead of 'blue' and 'red')
   theme(plot.title = element_text(size = 16,     # Changes the size, color, face, and adjusts the title and subtitle.
                                   color = "black",
                                   face = 'bold',
@@ -140,7 +151,7 @@ CatvDog_Data_Bar %>%
                                      color = "black",
                                      face = 'italic',
                                      hjust = 0.5),
-        axis.title = element_text(size = 12,      # Chnages the size and color of the axis and legend titles.
+        axis.title = element_text(size = 12,      # Changes the size and color of the axis and legend titles.
                                   color = "black"),
         legend.title = element_text(size = 12,
                                     color = "black"))
@@ -154,21 +165,9 @@ CatvDog_Data_Bar %>%
 
 ---
 
-# Dog and Cat Households by State
+# Dog vs. Cat Households by State
 
-- As expected, the states with larger populations have the larger amount of both dog and cat households.
-
---
-
-  - This could have to do with some states having a specific amount of dogs and cats that each household can have.
-
---
-
-  - Usually goes by county.
-
---
-
-- From the plot, it appears that more household have dogs compared to cats.
+- From the plot, it appears that more states have more households with dogs compared to cats.
 
 --
 
@@ -180,27 +179,79 @@ CatvDog_Data_Bar %>%
     
 --
 
-  - Connecticut
-
---
-
-  - Maine
-
---
-
-  - and some other mainly east coast states
+  - Washington
   
 --
+
+  - and some other states
+  
+--
+
+.center[![Inputs](libs/images/DogsWin.jpg)]
 ---
 
 # Statistics for Dogs vs. Cats
 
+```{r, echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
+CvDPath <- here("Independent Project", "Data") # Points a path to the location of the folder
+
+files <- dir(path = CvDPath,pattern = ".csv") # Lists all the files in that path with a specific pattern
+
+files
+
+CatvDog_Data_Stats<-data.frame(matrix(nrow = 1, ncol = 5)) # Makes an empty data frame to pre-allocate space
+
+colnames(CatvDog_Data_Stats) <- c("filename","mean_cat_population", "mean_dog_population", "avg_dogs_per_household", "avg_cats_per_household") # Gives column names to the data frame
+
+CatvDog_Data_Stats
+
+for (i in 1:length(files)){ # Loop over 1:5 the number of files 
+  Raw_Data<-read_csv(paste0(CvDPath,"/",files[i]))
+  CatvDog_Data_Stats$filename[i]<-files[i]
+  CatvDog_Data_Stats$mean_cat_population[i]<-mean(Raw_Data$cat_population, na.rm =TRUE) # Calculates the mean temperature
+  CatvDog_Data_Stats$mean_dog_population[i]<-mean(Raw_Data$dog_population, na.rm =TRUE) # Calculates the mean light intensity
+  CatvDog_Data_Stats$avg_dogs_per_household[i] <- mean(Raw_Data$avg_dogs_per_household, na.rm = TRUE) # Calculates the standard deviation of temperature
+  CatvDog_Data_Stats$avg_cats_per_household[i] <- mean(Raw_Data$avg_cats_per_household, na.rm = TRUE) # Calculates the standard deviation of light intensity
+}
+
+
+```
+- I averaged the populations of both dogs and cats for all 48 states.
+
+--
+
+- I also averaged out the average number of dogs and cats per household for every state.
+
+--
+
 ```{r}
-CatvDog_Data_Stats <- CatvDog_Data %>%
-  mutate(mean_cat_population = mean(cat_population),
-         mean_dog_population = mean(dog_population),
-         avg_dogs_per_household = mean(avg_dogs_per_household),
-         avg_cats_per_household = mean(avg_cats_per_household))
+knitr::kable(CatvDog_Data_Stats, format = 'html',
+             col.names = c("File Name", "Mean Cat Population", "Mean Dog Population", "Average Cats per Household", "Average Dogs per Household")) %>%
+  kable_styling(position = "left", full_width = FALSE) %>%
+  column_spec(1, bold = TRUE, border_right = TRUE, color = "black", background = "lightgrey") %>%
+  row_spec(0, background  = "turquoise")
 ```
 
+--
 
+- Cats have a larger overall population despite having less households.
+
+--
+
+- People seem to own around 1-2 cats and 2 dogs per household.
+
+---
+# Cat vs. Dogs
+
+- Which do you prefer?
+
+  - Cats?
+  
+  
+  - Dogs?
+  
+  
+  - Both?
+  
+  
+  - Neither?

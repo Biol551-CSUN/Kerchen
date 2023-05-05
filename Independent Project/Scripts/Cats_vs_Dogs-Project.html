@@ -8,6 +8,8 @@
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+    <script src="libs/kePrint-0.0.1/kePrint.js"></script>
+    <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
   </head>
   <body>
     <textarea id="source">
@@ -26,7 +28,7 @@ class: center, middle, inverse, title-slide
 ### BIOL 551
 ]
 .date[
-### 2016/12/12 (updated: 2023-04-27)
+### 2016/12/12 (updated: 2023-05-05)
 ]
 
 ---
@@ -40,6 +42,7 @@ library(tidyverse)
 library(here)
 library(usmap)
 library(reshape2)
+library(kableExtra)
 ```
 
 ---
@@ -120,19 +123,33 @@ plot_usmap(data = CatvDog_Data,           # Plots a flat map of the US.
 
 ---
 
-# Dog and Cat Households by State
+# Dog vs. Cat Households by State
 
-- This next plot is a bar plot that compares the number of dog and cat households per state.
+- This next plot is a diverging bar plot that compares the number of dog and cat households per state.
 
 --
 
-- I ordered this plot from the larger amount of dog and cat households to the lowest.
+- I mutated the data frame to subtract the number of dog households from the number of cat households.
+
+--
+
+- The diverging plot shows whether the state has more dog or cat households.
+
+--
+
+  - Dog households are colored red while cat households are colored blue.
 
 
+```r
+CatvDog_Data_Bar &lt;- CatvDog_Data %&gt;%
+  mutate(value = n_dog_households - n_cat_households)
+
+color &lt;- ifelse(CatvDog_Data_Bar$value &lt; 0, "red", "blue")
+```
 
 ---
 
-# Dog and Cat Households by State
+# Dog vs. Cat Households by State
 
 .pull-left[
 
@@ -140,16 +157,15 @@ plot_usmap(data = CatvDog_Data,           # Plots a flat map of the US.
 CatvDog_Data_Bar %&gt;%     
   ggplot(aes(x = reorder(state, value), # Reorders the plot from most to least value
              y = value))+
-  geom_bar(aes(fill = variable), stat = "identity", position = "dodge")+
-  scale_y_log10()+  # Scales the y-axis by log10
+  geom_bar(aes(fill = color), stat = "identity")+  # Fills the plot with the colors from the ifelse statement
   coord_flip()+   # Flips the coordinate plane
   labs(x = "State",   # Gives pretty labels to the plot
        y = "Number of Households",
        fill = "Type of Household",
-       title = "Comparison of Number of Dog and Cat Households in the U.S.",
-       subtitle = "Categorized per State")+
-  scale_fill_discrete(labels = c('Dog Household', 'Cat Household'))+   # Re-labels the legend with prettier names (ex: instead of 'n_dog_households' and 'n_cat_households')
-  theme_bw()+   # Standard black and white theme.
+       title = "Cats vs. Dogs in the U.S.",
+       subtitle = "Categorized per State")+  
+  theme_minimal()+  # Minimal theme.
+  scale_fill_discrete(labels = c("Dog", "Cat"))+  # Re-labels the legend with prettier names (ex: instead of 'blue' and 'red')
   theme(plot.title = element_text(size = 16,     # Changes the size, color, face, and adjusts the title and subtitle.
                                   color = "black",
                                   face = 'bold',
@@ -158,7 +174,7 @@ CatvDog_Data_Bar %&gt;%
                                      color = "black",
                                      face = 'italic',
                                      hjust = 0.5),
-        axis.title = element_text(size = 12,      # Chnages the size and color of the axis and legend titles.
+        axis.title = element_text(size = 12,      # Changes the size and color of the axis and legend titles.
                                   color = "black"),
         legend.title = element_text(size = 12,
                                     color = "black"))
@@ -171,21 +187,9 @@ CatvDog_Data_Bar %&gt;%
 
 ---
 
-# Dog and Cat Households by State
+# Dog vs. Cat Households by State
 
-- As expected, the states with larger populations have the larger amount of both dog and cat households.
-
---
-
-  - This could have to do with some states having a specific amount of dogs and cats that each household can have.
-
---
-
-  - Usually goes by county.
-
---
-
-- From the plot, it appears that more household have dogs compared to cats.
+- From the plot, it appears that more states have more households with dogs compared to cats.
 
 --
 
@@ -197,30 +201,65 @@ CatvDog_Data_Bar %&gt;%
     
 --
 
-  - Connecticut
-
---
-
-  - Maine
-
---
-
-  - and some other mainly east coast states
+  - Washington
   
 --
+
+  - and some other states
+  
+--
+
+.center[![Inputs](libs/images/DogsWin.jpg)]
 ---
 
 # Statistics for Dogs vs. Cats
 
 
+- I averaged the populations of both dogs and cats for all 48 states.
+
+--
+
+- I also averaged out the average number of dogs and cats per household for every state.
+
+--
+
+
 ```r
-CatvDog_Data_Stats &lt;- CatvDog_Data %&gt;%
-  mutate(mean_cat_population = mean(cat_population),
-         mean_dog_population = mean(dog_population),
-         avg_dogs_per_household = mean(avg_dogs_per_household),
-         avg_cats_per_household = mean(avg_cats_per_household))
+knitr::kable(CatvDog_Data_Stats, format = 'html',
+             col.names = c("File Name", "Mean Cat Population", "Mean Dog Population", "Average Cats per Household", "Average Dogs per Household")) %&gt;%
+  kable_styling(position = "left", full_width = FALSE) %&gt;%
+  column_spec(1, bold = TRUE, border_right = TRUE, color = "black", background = "lightgrey") %&gt;%
+  row_spec(0, background  = "turquoise")
 ```
 
+&lt;table class="table" style="width: auto !important; "&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;background-color: turquoise !important;"&gt; File Name &lt;/th&gt;
+   &lt;th style="text-align:right;background-color: turquoise !important;"&gt; Mean Cat Population &lt;/th&gt;
+   &lt;th style="text-align:right;background-color: turquoise !important;"&gt; Mean Dog Population &lt;/th&gt;
+   &lt;th style="text-align:right;background-color: turquoise !important;"&gt; Average Cats per Household &lt;/th&gt;
+   &lt;th style="text-align:right;background-color: turquoise !important;"&gt; Average Dogs per Household &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;font-weight: bold;color: black !important;background-color: lightgrey !important;border-right:1px solid;"&gt; cats_vs_dogs.csv &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1492.796 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1414.163 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.587755 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.040816 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+--
+
+- Cats have a larger overall population despite having less households.
+
+--
+
+- People seem to own around 1-2 cats and 2 dogs per household.
 
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
